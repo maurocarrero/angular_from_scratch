@@ -1,0 +1,16 @@
+<div class="container" ng-controller="SimpleController">
+	<h3>Looping with the ng-repeat directive</h3>
+	<p>Filter by: <br>
+	<input type="text" ng-model="filter.someText" /> {{ filter.someText }}</p>
+	<ul >
+		<li ng-repeat="person in people | filter:filter.someText | orderBy:'-city'">
+			{{ person.name }} - {{ person.city | uppercase}}
+		</li>
+	</ul>
+	<h3>New Person</h3>
+	<p>Name: <br>
+	<input type="text" ng-model="newPerson.name" /> {{ newPerson.name }}</p>
+	<p>City: <br>
+	<input type="text" ng-model="newPerson.city" /> {{ newPerson.city }}</p>
+	<button ng-click="addPerson()">Add person</button>
+</div>

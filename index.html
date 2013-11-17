@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html ng-app="demoApp">
+<head>
+	<title>AngularJS</title>
+</head>
+<!--
+Unusual initialization
+<body data-ng-init="people = [{ name: 'Virginia Perez', city: 'Montevideo'}, 
+							{ name: 'Ignacio Fernandez', city: 'Canelones'},
+							{ name: 'Lucas Lopez', city: 'Maldonado'},
+							{name: 'Mauro Martinez', city: 'Rocha'}]">
+-->
+	
+	<div ng-view></div>
+
+	<script src="js/angular.min.js"></script>
+	<script>
+		'use strict';
+
+		// MAIN MODULE
+		var demoApp = angular.module('demoApp', []);
+
+		// ROUTES
+		demoApp.config(function($routeProvider) {
+			$routeProvider
+				.when('/', {
+					controller: 'SimpleController',
+					templateUrl: 'partials/view1.html'
+				})
+				.when('/view2', {
+					controller: 'AnotherController',
+					templateUrl: 'partials/view2.html'
+				})
+				.otherwise({
+					redirectTo: '/'
+				});
+		});
+
+		// CONTROLLERS
+
+		var controllers = {};
+		controllers.SimpleController = function($scope) {
+			$scope.people = [
+				{ name: 'Virginia Perez', city: 'Montevideo'}, 
+				{ name: 'Ignacio Fernandez', city: 'Canelones'},
+				{ name: 'Lucas Lopez', city: 'Maldonado'},
+				{ name: 'Mauro Martinez', city: 'Rocha'}
+			];
+			$scope.addPerson = function() {
+				$scope.people.push({name: $scope.newPerson.name, city: $scope.newPerson.city }); 
+			};
+		};
+
+		controllers.AnotherController = function($scope) {
+			$scope.whoami = "I am another controller scope";
+		}
+
+		demoApp.controller(controllers);
+
+		/*
+		// CONTROLLERS
+
+		demoApp.controller('SimpleController', function($scope) {
+			$scope.people = [
+				{ name: 'Virginia Perez', city: 'Montevideo'}, 
+				{ name: 'Ignacio Fernandez', city: 'Canelones'},
+				{ name: 'Lucas Lopez', city: 'Maldonado'},
+				{ name: 'Mauro Martinez', city: 'Rocha'}
+			];
+		});
+
+		// other way 
+
+		function SimpleController($scope) {
+			$scope.people = [
+				{ name: 'Virginia Perez', city: 'Montevideo'}, 
+				{ name: 'Ignacio Fernandez', city: 'Canelones'},
+				{ name: 'Lucas Lopez', city: 'Maldonado'},
+				{ name: 'Mauro Martinez', city: 'Rocha'}
+			]
+		};
+		*/
+	</script>
+</body>
+</html>
