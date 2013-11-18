@@ -3,27 +3,25 @@
 <head>
 	<title>AngularJS</title>
 </head>
-<!--
-Unusual initialization
-<body data-ng-init="people = [{ name: 'Virginia Perez', city: 'Montevideo'}, 
-							{ name: 'Ignacio Fernandez', city: 'Canelones'},
-							{ name: 'Lucas Lopez', city: 'Maldonado'},
-							{name: 'Mauro Martinez', city: 'Rocha'}]">
--->
-	
+<body>
+	<!-- PlaceHolder for views -->
 	<div ng-view></div>
 
 	<script src="js/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
 	<script>
 		'use strict';
 
 		// MAIN MODULE
-		var demoApp = angular.module('demoApp', []);
+		var demoApp = angular.module('demoApp', ['ngRoute']);
 
 		// ROUTES
-		demoApp.config(function($routeProvider) {
+		demoApp.config(function ($routeProvider) {
 			$routeProvider
 				.when('/', {
+					redirectTo: '/view1'
+				})
+				.when('/view1', {
 					controller: 'SimpleController',
 					templateUrl: 'partials/view1.html'
 				})
@@ -32,54 +30,50 @@ Unusual initialization
 					templateUrl: 'partials/view2.html'
 				})
 				.otherwise({
-					redirectTo: '/'
+					redirectTo: '/view1'
 				});
-		});
+		})
 
-		// CONTROLLERS
+		// FACTORIES // or SERVICE // OR PROVIDER --> Very Similar
 
-		var controllers = {};
-		controllers.SimpleController = function($scope) {
-			$scope.people = [
+		.factory('simpleFactory', function(){
+			
+			var people = [
 				{ name: 'Virginia Perez', city: 'Montevideo'}, 
 				{ name: 'Ignacio Fernandez', city: 'Canelones'},
 				{ name: 'Lucas Lopez', city: 'Maldonado'},
 				{ name: 'Mauro Martinez', city: 'Rocha'}
 			];
+
+			var factory = {};
+			factory.getPeople = function() {
+				return people;
+			}
+			factory.putPeople = function(person) {
+				people.push(person);
+			}
+			return factory;
+		})
+
+		// CONTROLLERS
+
+		.controller('SimpleController', function($scope, simpleFactory) {
+			$scope.people = [];
+
+			init();
+
+			function init() {
+				$scope.people = simpleFactory.getPeople();
+			}
+			
 			$scope.addPerson = function() {
 				$scope.people.push({name: $scope.newPerson.name, city: $scope.newPerson.city }); 
 			};
-		};
-
-		controllers.AnotherController = function($scope) {
+		})
+		.controller('AnotherController', function($scope) {
 			$scope.whoami = "I am another controller scope";
-		}
-
-		demoApp.controller(controllers);
-
-		/*
-		// CONTROLLERS
-
-		demoApp.controller('SimpleController', function($scope) {
-			$scope.people = [
-				{ name: 'Virginia Perez', city: 'Montevideo'}, 
-				{ name: 'Ignacio Fernandez', city: 'Canelones'},
-				{ name: 'Lucas Lopez', city: 'Maldonado'},
-				{ name: 'Mauro Martinez', city: 'Rocha'}
-			];
 		});
 
-		// other way 
-
-		function SimpleController($scope) {
-			$scope.people = [
-				{ name: 'Virginia Perez', city: 'Montevideo'}, 
-				{ name: 'Ignacio Fernandez', city: 'Canelones'},
-				{ name: 'Lucas Lopez', city: 'Maldonado'},
-				{ name: 'Mauro Martinez', city: 'Rocha'}
-			]
-		};
-		*/
 	</script>
 </body>
 </html>
